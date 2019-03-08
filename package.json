@@ -3,9 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "canvasjs": "^1.8.1",
+    "chart.js": "^2.7.3",
+    "highcharts": "^7.0.3",
+    "highcharts-react-official": "^2.0.0",
     "react": "^16.8.3",
+    "react-chartjs-2": "^2.7.4",
     "react-dom": "^16.8.3",
-    "react-scripts": "2.1.5"
+    "react-jsx-highcharts": "^3.5.0",
+    "react-redux": "^6.0.1",
+    "react-scripts": "2.1.5",
+    "react-sparklines": "^1.7.0",
+    "redux": "^4.0.1",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^1.0.2",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.85.0"
   },
   "scripts": {
     "start": "react-scripts start",
