@@ -1,10 +1,11 @@
 import React from 'react'
-import {connect} from "react-redux";
+import { bindActionCreators } from 'redux'
+import {connect} from 'react-redux';
 import {Table, Loader, Dimmer} from 'semantic-ui-react'
 import CampaignRow from './CampaignRow';
 import actions from './duck/actions';
 import {Container} from 'semantic-ui-react'
-import CampaignModal from './CampaignModal';
+import CampaignModal2 from './CampaignModal2';
 
 class CampaignContainer extends React.Component {
   state = {
@@ -70,8 +71,11 @@ class CampaignContainer extends React.Component {
               </Table.Body>
             </Table>
         }
-        <CampaignModal
-          campaign={this.state.modalCampaign}
+        <CampaignModal2
+          id={this.state.modalCampaign.id}
+          requestOneCampaign={this.props.requestOneCampaign}
+          modalCampaign={this.props.modalCampaign}
+          modalLoading={this.props.modalLoading}
           open={this.state.openModal}
           onCloseClick={this.handleClose}
           onUpdateClick={(newValue) => this.handleUpdate(this.state.modalCampaign.id, newValue)}
@@ -83,11 +87,14 @@ class CampaignContainer extends React.Component {
 
 const mapStateToProps = (state) => ({
   campaigns: state.campaigns.items,
-  loading: state.campaigns.loading
+  loading: state.campaigns.loading,
+  modalCampaign: state.modalCampaign.item,
+  modalLoading: state.modalCampaign.loading
 });
 
-const mapDispatchToProps = dispatch => ({
-  requestCampaigns: () => dispatch(actions.requestCampaigns())
+const mapDispatchToProps = (dispatch) => ({
+  requestCampaigns: bindActionCreators(actions.requestCampaigns, dispatch),
+  requestOneCampaign: bindActionCreators(actions.requestOneCampaign, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CampaignContainer)

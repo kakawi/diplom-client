@@ -24,8 +24,23 @@ function* requestCampaigns() {
   yield put({type: types.RECEIVE_CAMPAIGNS, data})
 }
 
+export function* requestOneCampaign(action) {
+  console.log(action);
+  const data = {
+    id: 1,
+    name: 'Campaign1',
+    impressionsHistory: [1, 2, 3],
+    clicksHistory: [22, 3, 4],
+    costHistory: [10, 20, 15],
+    currentValue: 100
+  };
+  yield call(delay, 500);
+  yield put({type: types.RECEIVE_ONE_CAMPAIGN, data});
+}
+
 function* watchRequestCampaigns() {
-  yield takeEvery(types.REQUEST_CAMPAIGNS, requestCampaigns)
+  yield takeEvery(types.REQUEST_CAMPAIGNS, requestCampaigns);
+  yield takeEvery(types.REQUEST_ONE_CAMPAIGN, requestOneCampaign);
 }
 
 function* watchCampaigns() {
