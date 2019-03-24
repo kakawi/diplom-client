@@ -41,11 +41,17 @@ class CampaignModal extends React.Component {
       const {
         id,
         name,
-        impressionsHistory,
-        clicksHistory,
-        costHistory,
-        currentValue
+        campaignStatistics
       } = modalCampaign;
+      const impressionsHistory = campaignStatistics === undefined ? [] : campaignStatistics.map(statistic => {
+        return statistic.impressions
+      });
+      const clicksHistory = campaignStatistics === undefined ? [] : campaignStatistics.map(statistic => {
+        return statistic.clicks
+      });
+      const costHistory = campaignStatistics === undefined ? [] : campaignStatistics.map(statistic => {
+        return statistic.spends
+      });
       const options = {
         title: {
           text: `Campaign: ${name}`
@@ -78,6 +84,7 @@ class CampaignModal extends React.Component {
         ]
       };
 
+      const currentValue = 1;
       const currentValueModal = this.state.newValue || currentValue;
       const suggestCost = 999;
 

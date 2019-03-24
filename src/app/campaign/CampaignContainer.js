@@ -9,7 +9,7 @@ import CampaignModal2 from './CampaignModal2';
 
 class CampaignContainer extends React.Component {
   state = {
-    modalCampaign: {},
+    modalCampaign: undefined,
     openModal: false
   };
 
@@ -27,7 +27,8 @@ class CampaignContainer extends React.Component {
   };
   handleClose = () => {
     this.setState(() => ({
-      openModal: false
+      openModal: false,
+      modalCampaign: undefined
     }))
   };
   handleUpdate = (id, newValue) => {
@@ -54,7 +55,7 @@ class CampaignContainer extends React.Component {
                   <Table.HeaderCell>Campaign name</Table.HeaderCell>
                   <Table.HeaderCell>Impressions</Table.HeaderCell>
                   <Table.HeaderCell>Clicks</Table.HeaderCell>
-                  <Table.HeaderCell>Cost</Table.HeaderCell>
+                  <Table.HeaderCell>Spends</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
 
@@ -63,23 +64,24 @@ class CampaignContainer extends React.Component {
                   key={campaign.id}
                   id={campaign.id}
                   name={campaign.name}
-                  impressionsHistory={campaign.impressionsHistory}
-                  clicksHistory={campaign.clicksHistory}
-                  costHistory={campaign.costHistory}
+                  campaignStatistics={campaign.campaignStatistics}
                   onRowClick={() => this.handleClickOnRow(campaign.id)}
                 />)}
               </Table.Body>
             </Table>
         }
-        <CampaignModal2
-          id={this.state.modalCampaign.id}
-          requestOneCampaign={this.props.requestOneCampaign}
-          modalCampaign={this.props.modalCampaign}
-          modalLoading={this.props.modalLoading}
-          open={this.state.openModal}
-          onCloseClick={this.handleClose}
-          onUpdateClick={(newValue) => this.handleUpdate(this.state.modalCampaign.id, newValue)}
-        />
+        {this.state.modalCampaign ?
+          <CampaignModal2
+            id={this.state.modalCampaign.id}
+            requestOneCampaign={this.props.requestOneCampaign}
+            modalCampaign={this.props.modalCampaign}
+            modalLoading={this.props.modalLoading}
+            open={this.state.openModal}
+            onCloseClick={this.handleClose}
+            onUpdateClick={(newValue) => this.handleUpdate(this.state.modalCampaign.id, newValue)}
+          />
+          : <div></div>
+        }
       </Container>
     )
   }

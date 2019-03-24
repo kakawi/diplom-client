@@ -7,11 +7,18 @@ class CampaignRow extends React.Component {
     const {
       id,
       name,
-      impressionsHistory,
-      clicksHistory,
-      costHistory,
+      campaignStatistics,
       onRowClick
     } = this.props;
+    const impressionsHistory = campaignStatistics === undefined ? [] : campaignStatistics.map(statistic => {
+      return statistic.impressions
+    });
+    const clicksHistory = campaignStatistics === undefined ? [] : campaignStatistics.map(statistic => {
+      return statistic.clicks
+    });
+    const spendsHistory = campaignStatistics === undefined ? [] : campaignStatistics.map(statistic => {
+      return statistic.spends
+    });
     return (
       <Table.Row
         onClick={onRowClick}
@@ -35,7 +42,7 @@ class CampaignRow extends React.Component {
           </Sparklines>
         </Table.Cell>
         <Table.Cell width={3}>
-          <Sparklines data={costHistory}>
+          <Sparklines data={spendsHistory}>
             <SparklinesLine color="blue"/>
             <SparklinesReferenceLine type="mean"/>
           </Sparklines>
