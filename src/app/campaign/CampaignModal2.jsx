@@ -2,11 +2,14 @@ import React from 'react';
 import {Dimmer, Loader, Modal} from 'semantic-ui-react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import {Input, Container, Button, Icon} from 'semantic-ui-react'
+import {Input, Container, Button, Icon, Dropdown} from 'semantic-ui-react'
+import {linearApproximation, logarithmApproximation} from "../common/approximations";
 
 class CampaignModal extends React.Component {
   state = {
     newValue: null,
+    approximationDropdownValue: 'linear',
+    parameterDropdownValue: 'impressions'
   };
 
   componentDidMount() {
@@ -18,6 +21,18 @@ class CampaignModal extends React.Component {
     this.setState(() => ({
       newValue: value
     }))
+  };
+
+  handleApproximationDropdownChange = (e, {value}) => {
+    this.setState(() => ({
+      approximationDropdownValue: value
+    }));
+  };
+
+  handleParameterDropdownChange = (e, {value}) => {
+    this.setState(() => ({
+      parameterDropdownValue: value
+    }));
   };
 
   render() {
@@ -52,6 +67,27 @@ class CampaignModal extends React.Component {
       const costHistory = campaignStatistics === undefined ? [] : campaignStatistics.map(statistic => {
         return statistic.spends
       });
+
+      let valuesForApproximation;
+      if (this.state.parameterDropdownValue === 'impressions') {
+        valuesForApproximation = impressionsHistory;
+      } else {
+        valuesForApproximation = clicksHistory;
+      }
+
+      let approximatedFunction;
+      if (this.state.approximationDropdownValue === 'linear') {
+        approximatedFunction = costHistory === undefined ? x => x : linearApproximation(costHistory, valuesForApproximation);
+      } else {
+        approximatedFunction = costHistory === undefined ? x => x : logarithmApproximation(costHistory, valuesForApproximation);
+      }
+      let withNewValue = undefined;
+      if (costHistory) {
+        withNewValue = costHistory.concat(this.state.newValue)
+      }
+      const approximatedValues = withNewValue === undefined ? undefined : withNewValue.map(cost => approximatedFunction(cost));
+      const resultNewValue = withNewValue === undefined ? undefined : approximatedFunction(this.state.newValue);
+
       const options = {
         title: {
           text: `Campaign: ${name}`
@@ -78,11 +114,42 @@ class CampaignModal extends React.Component {
             data: clicksHistory
           },
           {
-            name: 'Cost',
+            name: 'Spends',
             data: costHistory
+          },
+          {
+            name: 'Approximation',
+            data: approximatedValues,
+            dashStyle: 'dash'
           }
         ]
       };
+
+      const approximationOptions = [
+        {
+          key: 1,
+          text: 'Linear Approximation',
+          value: 'linear',
+        },
+        {
+          key: 2,
+          text: 'Logarithm Approximation',
+          value: 'logarithm',
+        }
+      ];
+
+      const parameterOptions = [
+        {
+          key: 1,
+          text: 'Impressions',
+          value: 'impressions',
+        },
+        {
+          key: 2,
+          text: 'Clicks',
+          value: 'clicks',
+        }
+      ];
 
       const currentValue = 1;
       const currentValueModal = this.state.newValue || currentValue;
@@ -91,21 +158,29 @@ class CampaignModal extends React.Component {
       result = (
         <Modal.Content>
           <Container>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={options}
-          />
-            <div>
-              Current Cost: {currentValue}$
-            </div>
-            <div>
-              Suggest Cost: {suggestCost}$
-            </div>
-            <Input
-              onChange={(e) => this.handleInput(e)}
-              value={currentValueModal}
-            >
-            </Input>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={options}
+            />
+            <Container>
+              <Input
+                onChange={(e) => this.handleInput(e)}
+                value={currentValueModal}
+              />
+              <div>Result value {Math.round(resultNewValue)}</div>
+            </Container>
+            <Container>
+              <Dropdown
+                options={approximationOptions}
+                value={this.state.approximationDropdownValue}
+                onChange={this.handleApproximationDropdownChange}
+              />
+              <Dropdown
+                options={parameterOptions}
+                value={this.state.parameterDropdownValue}
+                onChange={this.handleParameterDropdownChange}
+              />
+            </Container>
           </Container>
         </Modal.Content>
       )
