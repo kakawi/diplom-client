@@ -15,7 +15,8 @@ function fetchById(id) {
     "method": "GET",
     "uri": "http://localhost:3000/api/campaigns/" + id,
     "qs": {
-      isFetchStatistic: true
+      isFetchStatistic: true,
+      isFetchProductStatistic: true
     }
   }).then(result => JSON.parse(result))
 }
