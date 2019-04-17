@@ -1,11 +1,13 @@
 import request from 'request-promise';
 
-function fetchAll() {
+function fetchAll(page, size) {
   return request({
     "method": "GET",
     "uri": "http://localhost:3000/api/campaigns",
     "qs": {
-      isFetchStatistic: true
+      isFetchStatistic: true,
+      page,
+      size
     }
   }).then(result => JSON.parse(result))
 }

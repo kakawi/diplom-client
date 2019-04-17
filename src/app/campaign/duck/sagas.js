@@ -4,8 +4,9 @@ import CampaignApi from './CampaignApi';
 
 const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
-function* requestCampaigns() {
-  const data = yield call(CampaignApi.fetchAll);
+function* requestCampaigns(action) {
+  const {page, size} = action.payload;
+  const data = yield call(CampaignApi.fetchAll, page, size);
   yield put({type: types.RECEIVE_CAMPAIGNS, data})
 }
 

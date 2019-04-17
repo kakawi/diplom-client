@@ -1,8 +1,11 @@
 import types from './types';
 
-function requestCampaigns() {
+function requestCampaigns(page, size) {
   return {
-    type: types.REQUEST_CAMPAIGNS, payload: 99999
+    type: types.REQUEST_CAMPAIGNS, payload: {
+      page,
+      size
+    }
   }
 }
 
@@ -12,7 +15,14 @@ function requestOneCampaign(id) {
   }
 }
 
+function changePage(newPageNumber) {
+  return {
+    type: types.CHANGE_PAGE_NUMBER, payload: newPageNumber
+  }
+}
+
 export default {
   requestCampaigns,
-  requestOneCampaign
+  requestOneCampaign,
+  changePage
 }

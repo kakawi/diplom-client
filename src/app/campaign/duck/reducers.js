@@ -2,7 +2,10 @@ import types from './types';
 
 const INITIAL_STATE = {
   items: [],
-  loading: false
+  loading: false,
+  totalPageCount: 1,
+  currentPage: 1,
+  countPerPage: 2
 };
 
 const campaignReducer = (state = INITIAL_STATE, action) => {
@@ -15,11 +18,21 @@ const campaignReducer = (state = INITIAL_STATE, action) => {
       }
     }
     case types.RECEIVE_CAMPAIGNS: {
-      const {data} = action;
+      const {campaigns, pageable} = action.data;
       return {
         ...state,
-        items: data,
-        loading: false
+        items: campaigns,
+        loading: false,
+        totalPageCount: pageable.totalPageNumber,
+        currentPage: pageable.page,
+        countPerPage: pageable.size
+      }
+    }
+    case types.CHANGE_PAGE_NUMBER: {
+      debugger;
+      return {
+        ...state,
+        currentPage: action.payload
       }
     }
     default:
